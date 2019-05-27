@@ -54,6 +54,12 @@ const cli = require("yargs")
 				demand: false,
 				default: undefined
 			})
+			.options("config-file", {
+				type: "string",
+				describe: "File (*.js) that loads all the CLI parameters",
+				demand: false,
+				default: undefined
+			})
 			.command("create", "Create a new migration", (yargs) => {
 				return yargs
 					.default("command", "create")
@@ -91,8 +97,8 @@ const cli = require("yargs")
 					});
 			})
 			.command("list", "List the status of the migrations", yargs => {
-				yargs.argv.command = "status";
 				return yargs
+					.default("command", "list")
 			});
 	})
 	.help()
@@ -100,9 +106,11 @@ const cli = require("yargs")
 	.wrap(110);
 
 if((typeof cli.argv === "string") || (cli.argv.command === "help")) {
-	console.log("Help");
 	cli.showHelp();
 } else {
+	if(typeof cli.argv.configFile === "string") {
+		cli.argv = Object.assign(cli.argv, require(cli.argv.configFile));
+	}
 	if(typeof cli.argv.logger === "string") {
 		try {
 			cli.argv.logger = require(cli.argv.logger);

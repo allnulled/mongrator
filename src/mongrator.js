@@ -31,13 +31,10 @@ class Mongrator {
 		return `${date.getFullYear()}.${this.padLeft(date.getMonth() + 1, 2)}.${this.padLeft(
 			date.getDate(),
 			2
-		)}-${this.padLeft(date.getHours(), 2)}.${this.padLeft(
-			date.getMinutes(),
+		)}-${this.padLeft(date.getHours(), 2)}.${this.padLeft(date.getMinutes(), 2)}.${this.padLeft(
+			date.getSeconds(),
 			2
-		)}.${this.padLeft(date.getSeconds(), 2)}.${this.padLeft(
-			date.getMilliseconds(),
-			3
-		)}`;
+		)}.${this.padLeft(date.getMilliseconds(), 3)}`;
 	}
 
 	error(...message) {
@@ -93,7 +90,9 @@ class Mongrator {
 			if (this.args.colorize) {
 				this.args.logger(
 					...message.map((msg) =>
-						chalk.bgWhite.black.bold.underline(typeof msg !== "string" ? JSON.stringify(msg, null, 4) : msg.toUpperCase())
+						chalk.bgWhite.black.bold.underline(
+							typeof msg !== "string" ? JSON.stringify(msg, null, 4) : msg.toUpperCase()
+						)
 					)
 				);
 			} else {
@@ -128,31 +127,26 @@ class Mongrator {
 		const files = await this._getTransactions(this.args.folder);
 		const pending = await this._getPending(status, files, direction, quantity);
 		const statistics = await this._migrate(pending, direction);
-		if (!this.args.keepAlive) {
-			await this.disconnect();
-		}
+		await this.disconnect();
 		return statistics;
 	}
 
 	async disconnect() {
-		try {
-			await this.args.mongoose.connection.close();
-		} catch (error) {}
+		if (!this.args.keepAlive) {
+			try {
+				await this.args.mongoose.connection.close();
+			} catch (error) {}
+		}
 	}
 
 	create(name = this.args.name, templatePath = this.args.templatePath) {
-			`${path.resolve(this.args.folder, this._getFilename(name))}`,
-		fs.writeFileSync(
-			fs.readFileSync(templatePath).toString(),
-			"utf8"
-		);
+		`${path.resolve(this.args.folder, this._getFilename(name))}`,
+			fs.writeFileSync(fs.readFileSync(templatePath).toString(), "utf8");
 	}
 
 	async list() {
 		await this.init();
-		const query = this.args.mongoose
-			.model(this.args.collection)
-			.find({});
+		const query = this.args.mongoose.model(this.args.collection).find({});
 		const status = await query.exec();
 		const byNames = status.reduce((result, item) => {
 			result[item.name] = item;
@@ -179,6 +173,7 @@ class Mongrator {
 				this.warn("[ ]  - Last run: not run yet");
 			}
 		});
+		await this.disconnect();
 	}
 
 	constructor(args = {}) {
@@ -186,9 +181,14 @@ class Mongrator {
 		if (!this.args.mongoose) {
 			this.args.mongoose = mongoose;
 		}
-		if (this.args.logger === true || this.args.logger === console || this.args.logger === console.log || typeof this.args.logger === "undefined") {
+		if (
+			this.args.logger === true ||
+			this.args.logger === console ||
+			this.args.logger === console.log ||
+			typeof this.args.logger === "undefined"
+		) {
 			this.args.logger = console.log.bind(console);
-		} else if(!this.args.logger) {
+		} else if (!this.args.logger) {
 			this.args.logger = false;
 		}
 		this.mongoose = this.args.mongoose;
@@ -320,13 +320,13 @@ class Mongrator {
 	}
 
 	async execute() {
-		switch(this.args.command) {
-			case "up": 
-			case "down": 
+		switch (this.args.command) {
+			case "up":
+			case "down":
 				return await this.migrate();
-			case "list": 
+			case "list":
 				return await this.list();
-			case "create": 
+			case "create":
 				return await this.create();
 		}
 	}
