@@ -41,7 +41,7 @@ Options:
 
 Type `mongrator <subcommand>` to see the help of any subcommand.
 
-#### Examples
+#### CLI Examples
 
 ##### `mongrator up` and `mongrator down`
 
@@ -95,9 +95,153 @@ $ mongrator <subcommand>
 
 ### API
 
+The API accepts almost the same options as the CLI.
 
+These are the default options:
+
+```js
+{
+  url: "mongodb://localhost:27017/test",
+  debug: true,
+  logger: true,
+  colorize: true,
+  folder: "db/migrations",
+  collection: "DatabaseMigrationsStatus",
+  mongoose: undefined,
+  keepAlive: true,
+  name: `unnamed`,
+  direction: "up",
+  quantity: -1, // This means "all the possible migrations"
+  templatePath: `${__dirname}/template/migration.js`, // This points to the same project, not the current working directory
+  options: {}
+}
+```
+
+#### API examples
+
+The same commands we showed previously for the CLI, in the API would look like this:
+
+##### `mongrator up` and `mongrator down`
+
+```
+$ mongrator up                                             # or <mongrator down>
+    --quantity 1                                           # Execute only 1 migration
+    --url mongodb://user@pass:ip.domain:27017/mydatabase   # Specify the URL of the database
+    --folder database/migrations/folder                    # Folder of the migration files
+    --collection CollectionForMigrationsInMyDatabase       # Name of the collection for the migrations in the database
+    --debug false                                          # Disable debugging
+    --keep-alive true                                      # Do not close connection once done
+    --logger my/file/to/my/logger.js                       # Load your custom logger function from a file
+    --mongoose database/mongoose/loader.js                 # Load your custom mongoose instance
+    --options database/configurations/loader.js            # Load your configurations for the connection
+```
+
+##### `mongrator list`
+
+```
+$ mongrator list
+    --url mongodb://user@pass:ip.domain:27017/mydatabase   # Specify the URL of the database
+    --folder database/migrations/folder                    # Folder of the migration files
+    --collection CollectionForMigrationsInMyDatabase       # Name of the collection for the migrations in the database
+    --keep-alive true                                      # Do not close connection once done
+    --logger my/file/to/my/logger.js                       # Load your custom logger function from a file
+    --mongoose database/mongoose/loader.js                 # Load your custom mongoose instance
+    --options database/configurations/loader.js            # Load your configurations for the connection
+```
+
+##### `mongrator create`
+
+```
+$ mongrator list
+    --name migration-name                                  # Specify the name of the migration
+    --template-path path/to/your/migrations-template.js    # Specify the template file for the new migration
+    --url mongodb://user@pass:ip.domain:27017/mydatabase   # Specify the URL of the database
+    --folder database/migrations/folder                    # Folder of the migration files
+    --collection CollectionForMigrationsInMyDatabase       # Name of the collection for the migrations in the database
+    --keep-alive true                                      # Do not close connection once done
+    --logger my/file/to/my/logger.js                       # Load your custom logger function from a file
+    --mongoose database/mongoose/loader.js                 # Load your custom mongoose instance
+    --options database/configurations/loader.js            # Load your configurations for the connection
+```
+
+In case you needed to provide credentials secretly and/or through environmental variables, you can also:
+
+```
+$ mongrator <subcommand>
+    --config-file path/to/migrations-config.js             # Specify all the options through a file
+```
+
+### Migration files
+
+The migration files are very simple. They all return an object with:
+   - an `up` asynchronous method
+   - a `down` asynchronous method
+
+By being an `async`hronous method, it means that it must return a `Promise`.
+
+The default template file looks like this:
+
+```js
+module.exports = {
+  up: async function(mongoose, migrator) {
+    // @TODO: migration up here...
+  },
+  down: async function(mongoose, migrator) {
+    // @TODO: migration down here...
+  }
+};
+```
+
+You can find examples of this kind of files in `test/db/migrations/*.js` and on `test/mongrator.test.js` files.
+
+For example, the `test/db/migrations/001-first.js` file, which loads a model, saves an instance and queries the collection:
+
+```js
+require(__dirname + "/../models/User.js");
+
+module.exports = {
+  up: async function(mongoose, migrator) {
+    const User = mongoose.model("User");
+    const user = new User({
+      name: "xxx 1",
+      password: "xxx",
+      email: "xxx@xxx.xxx"
+    });
+    await user.save();
+    // Example of a query in async/await notation for mongoose
+    const users = await User.find().exec();
+    migrator.log(users);
+  },
+  down: async function(mongoose) {
+    const User = mongoose.model("User");
+    await User.deleteMany({});
+  }
+}
+```
+
+### API logging
+
+The logging is colorized to easily understand what is going on.
+
+   - On blue, the informative logs.
+
+   - On red, the error logs.
+
+   - On green, the positive logs.
+
+   - On yellow, the warning logs.
+
+Also, there is a special notation at the begining of each line:
+
+   - `[ ]`: no changes. No persistent operations present.
+   - `[·]`: soft changes. Operations that leave digital fingerprint, like `SELECTS` in database.
+   - `[#]`: hard changes. Operations that leave digital fingerprint and modify resources on the machine, like `INSERTS, UPDATES, DELETES` or writing to files.
+
+This nomenclature informs about the type of operation carried by the software that is running.
 
 ## Tests
+
+**Important: the tests will drop all the items at the `User` collection.**
 
 To run the tests you need to:
 

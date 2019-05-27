@@ -13,10 +13,17 @@
     "test:start:db": "mongod --dbpath test/db/data",
     "test": "mocha test/**/*.test.js"
   },
-  "keywords": ["mongo", "mongoose", "migrations", "mongodb", "database"],
+  "keywords": [
+    "mongo",
+    "mongoose",
+    "migrations",
+    "mongodb",
+    "database"
+  ],
   "author": "",
   "license": "WTFPL",
   "devDependencies": {
+    "bcrypt": "^3.0.6",
     "chai": "^4.2.0",
     "mongoose": "^5.5.11"
   },

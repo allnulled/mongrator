@@ -9,6 +9,9 @@ module.exports = {
 			email: "xxx@xxx.xxx"
 		});
 		await user.save();
+		// Example of a query in async/await notation for mongoose
+		const users = await User.find().exec();
+		migrator.log(users);
 	},
 	down: async function(mongoose) {
 		const User = mongoose.model("User");
