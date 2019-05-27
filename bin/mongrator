@@ -1,0 +1,136 @@
+#! /usr/bin/env node
+
+const cli = require("yargs")
+	.usage("Usage: $0 [command] [options]")
+	.command("$0", "Create, list, do and undo migrations for mongo databases with mongoose and models.", (yargs) => {
+		return yargs
+			.default("command", "help")
+			.hide("command")
+			.option("url", {
+				type: "string",
+				describe: "URL of the database",
+				demand: false,
+				default: "mongodb://localhost:27017/test"
+			})
+			.option("debug", {
+				type: "boolean",
+				describe: "To log or not to log",
+				demand: false,
+				default: true
+			})
+			.option("logger", {
+				type: "string",
+				describe: "File (*.js) that gets the logger function",
+				demand: false,
+				default: undefined
+			})
+			.option("folder", {
+				type: "string",
+				describe: "Folder of the migrations",
+				demand: false,
+				default: "db/migrations"
+			})
+			.option("collection", {
+				type: "string",
+				describe: "Name for the collection of the migrations",
+				demand: false,
+				default: "DatabaseMigrationsStatus"
+			})
+			.option("mongoose", {
+				type: "string",
+				describe: "File (*.js) that gets the mongoose instance",
+				demand: false,
+				default: undefined
+			})
+			.option("keep-alive", {
+				type: "boolean",
+				describe: "To leave the connection opened after the command or not",
+				demand: false,
+				default: false
+			})
+			.options("options", {
+				type: "string",
+				describe: "File (*.js) that gets the options of the db connection",
+				demand: false,
+				default: undefined
+			})
+			.command("create", "Create a new migration", (yargs) => {
+				return yargs
+					.default("command", "create")
+					.option("template-path", {
+						type: "string",
+						describe: "Path of the file used as migration template",
+						demand: false,
+						default: false
+					})
+					.option("name", {
+						type: "string",
+						describe: "Name of the new migration",
+						demand: false,
+						default: "unnamed"
+					});
+			})
+			.command("up", "Run up migration(s)", (yargs) => {
+				return yargs
+					.default("command", "up")
+					.option("quantity", {
+						type: "number",
+						describe: "Number of migrations to run",
+						demand: false,
+						default: -1
+					});
+			})
+			.command("down", "Run down migration(s)", (yargs) => {
+				return yargs
+					.default("command", "down")
+					.option("quantity", {
+						type: "number",
+						describe: "Number of migrations to run",
+						demand: false,
+						default: -1
+					});
+			})
+			.command("list", "List the status of the migrations", yargs => {
+				yargs.argv.command = "status";
+				return yargs
+			});
+	})
+	.help()
+	.version(require(__dirname + "/../package.json").version)
+	.wrap(110);
+
+if((typeof cli.argv === "string") || (cli.argv.command === "help")) {
+	console.log("Help");
+	cli.showHelp();
+} else {
+	if(typeof cli.argv.logger === "string") {
+		try {
+			cli.argv.logger = require(cli.argv.logger);
+		} catch(error) {
+			console.log("Error: failed loading logger function from: " + cli.argv.logger);
+			console.log(error);
+			return;
+		}
+	}
+	if(typeof cli.argv.mongoose === "string") {
+		try {
+			cli.argv.mongoose = require(cli.argv.mongoose);
+		} catch(error) {
+			console.log("Error: failed loading mongoose function from: " + cli.argv.mongoose);
+			console.log(error);
+			return;
+		}
+	}
+	if(typeof cli.argv.options === "string") {
+		try {
+			cli.argv.options = require(cli.argv.options);
+		} catch(error) {
+			console.log("Error: failed loading options function from: " + cli.argv.options);
+			console.log(error);
+			return;
+		}
+	}
+	const Mongrator = require(__dirname + "/../src/mongrator.js");
+	const mongrator = new Mongrator(cli.argv);
+	mongrator.execute();
+}

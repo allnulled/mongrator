@@ -1,0 +1,28 @@
+{
+  "name": "mongrator",
+  "version": "1.0.0",
+  "description": "Create, list, do and undo migrations for mongo databases with mongoose and models.",
+  "main": "src/mongrator.js",
+  "bin": {
+    "mongrator": "bin/mongrator"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test:start:db": "mongod --dbpath test/db/data",
+    "test": "mocha test/**/*.test.js"
+  },
+  "keywords": ["mongo", "mongoose", "migrations", "mongodb", "database"],
+  "author": "",
+  "license": "WTFPL",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mongoose": "^5.5.11"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "just-a-timer": "^1.0.1",
+    "yargs": "^13.2.4"
+  }
+}
