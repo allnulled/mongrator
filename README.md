@@ -286,4 +286,4 @@ As I usually work isolatedly because companies in Spain do not want me to work w
 
 So, please, give me a job, and I most probably will learn as soon as possible how to fulfill this part of the README file.
 
-
+*My life is a demonstrations that Gods exist. Some may call me "fool", but with that they probe them. They probe that Gods do not like me, and they want me to be ridiculous and crazy among a civilization of monkeys unable to share knowledge, differently of what I do most of the time with you, lovely monkeys.*
