@@ -1,7 +1,11 @@
 const { expect } = require("chai");
+const exec = require("execute-command-sync");
 const mongoose = require("mongoose");
 const Mongrator = require(__dirname + "/../src/mongrator.js");
 const User = require(__dirname + "/db/models/User.js");
+const globby = require("globby");
+const path = require("path");
+const rimraf = require("rimraf");
 
 describe("Mongrator API", function() {
 	this.timeout(10000);
@@ -74,4 +78,19 @@ describe("Mongrator API", function() {
 		const users2 = await User.find().exec();
 		expect(users2.length).to.equal(0);
 	});
+});
+
+describe("Mongrator CLI", function() {
+	this.timeout(10000);
+
+	it("can create migrations", async function() {
+		expect(globby.sync(`${__dirname}/db/migrations/*-sample1.js`).length).to.equal(0);
+		exec("./bin/mongrator create --name sample1 --folder test/db/migrations", {
+			cwd: path.resolve(`${__dirname}/..`)
+		});
+		expect(globby.sync(`${__dirname}/db/migrations/*-sample1.js`).length).to.equal(1);
+		rimraf.sync(`${__dirname}/db/migrations/*-sample1.js`);
+		expect(globby.sync(`${__dirname}/db/migrations/*-sample1.js`).length).to.equal(0);
+	});
+
 });

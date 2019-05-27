@@ -140,8 +140,17 @@ class Mongrator {
 	}
 
 	create(name = this.args.name, templatePath = this.args.templatePath) {
-		`${path.resolve(this.args.folder, this._getFilename(name))}`,
-			fs.writeFileSync(fs.readFileSync(templatePath).toString(), "utf8");
+		const outputFile = path.resolve(this.args.folder, this._getFilename(name));
+		const outputTemplate = path.resolve(templatePath);
+		this.info("[ ] New migration file path:");
+		this.info(`[ ]    - ${outputFile}`);
+		const outputContents = fs.readFileSync(outputTemplate).toString();
+		this.info("[ ] New migration template path:");
+		this.info(`[ ]    - ${path.resolve(templatePath)} (${outputContents.length} characters)`);
+		fs.writeFileSync(outputFile, outputContents, "utf8");
+		this.info("[#] Creating new migration file...");
+		this.log(`[✓] Successfully created migration at:`);
+		this.log(`[✓]    - ${outputFile}.`);
 	}
 
 	async list() {
@@ -195,7 +204,7 @@ class Mongrator {
 	}
 
 	_getFilename(name = "unnamed") {
-		return `${this.constructor.formatDate(new Date())}.${name}.js`;
+		return `${this.constructor.formatDate(new Date())}-${name}.js`;
 	}
 
 	async _connect() {

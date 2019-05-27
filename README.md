@@ -1,6 +1,6 @@
 # mongrator
 
-![](https://img.shields.io/badge/mongrator-v1.0.0-green.svg) ![](https://img.shields.io/badge/tests-only%20API-red.svg)
+![](https://img.shields.io/badge/mongrator-v1.0.1-green.svg) ![](https://img.shields.io/badge/tests-passing-yellow.svg)
 
 Create, list, do and undo migrations for mongo databases with mongoose and models. CLI and API.
 
@@ -242,7 +242,7 @@ The logging is colorized to easily understand what is going on.
 
    - On **green**, the positive logs.
 
-   - On **yellow**, the warning logs.
+   - On **yellow**, the warning logs and statistics.
 
 Also, there is a special notation at the begining of each line:
 
@@ -266,7 +266,7 @@ There is a script that creates a database for the default URL at `test/db/data`.
 
 ### 2) Run tests
 
-To run the tests (only API at the moment) you do:
+To run the tests you do:
 
 `$ npm run test`
 
@@ -286,4 +286,4 @@ As I usually work isolatedly because companies in Spain do not want me to work w
 
 So, please, give me a job, and I most probably will learn as soon as possible how to fulfill this part of the README file.
 
-*My life is a demonstrations that Gods exist. Some may call me "fool", but with that they probe them. They probe that Gods do not like me, and they want me to be ridiculous and crazy among a civilization of monkeys unable to share knowledge, differently of what I do most of the time with you, lovely monkeys.*
+*My life is a demonstration that Gods exist. Some may call me "fool", but with that they prove them. They prove that Gods do not like me, and they want me to be ridiculous and mad among a civilization of monkeys unable to share qualified knowledge for free, differently of what I do most of the time with you, lovely monkeys.*

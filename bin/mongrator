@@ -67,7 +67,7 @@ const cli = require("yargs")
 						type: "string",
 						describe: "Path of the file used as migration template",
 						demand: false,
-						default: false
+						default: `${__dirname}/../src/template/migration.js`
 					})
 					.option("name", {
 						type: "string",
