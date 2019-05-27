@@ -1,6 +1,6 @@
 # mongrator
 
-![](https://img.shields.io/badge/mongrator-v1.0.3-green.svg) ![](https://img.shields.io/badge/tests-passing-yellow.svg)
+![](https://img.shields.io/badge/mongrator-v1.0.4-green.svg) ![](https://img.shields.io/badge/tests-passing-yellow.svg)
 
 Create, list, do and undo migrations for mongo databases with mongoose and models. CLI and API.
 
