@@ -1,6 +1,6 @@
 {
   "name": "mongrator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Create, list, do and undo migrations for mongo databases with mongoose and models.",
   "main": "src/mongrator.js",
   "bin": {
