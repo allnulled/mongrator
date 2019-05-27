@@ -285,9 +285,3 @@ You can add your issues [here](https://github.com/allnulled/mongrator/issues/new
 As I usually work isolatedly because companies in Spain do not want me to work with them, I am not very aware about how to cooperate on git for software development.
 
 So, please, give me a job, and I most probably will learn as soon as possible how to fulfill this part of the README file.
-
-<<<<<<< HEAD
-*My life is a demonstration that Gods exist. Some may call me "fool", but with that they prove them. They prove that Gods do not like me, and they want me to be ridiculous and mad among a civilization of monkeys unable to share qualified knowledge for free, differently of what I do most of the time with you, lovely monkeys.*
-=======
-*My life is a demonstrations that Gods exist. Some may call me "fool", but with that they probe them. They probe that Gods do not like me, and they want me to be ridiculous and crazy among a civilization of monkeys unable to share knowledge **FOR FREE**, differently of what I do most of the time with you, lovely monkeys.*
->>>>>>> 909a4acebcc1571b84549f1fc3853c9aaba3c017
