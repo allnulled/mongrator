@@ -119,56 +119,69 @@ These are the default options:
 
 #### API examples
 
-The same commands we showed previously for the CLI, in the API would look like this:
+The same commands we showed previously for the CLI, in the API would look like follows.
+
+But first, import the API.
+
+```js
+const Mongrator = require("Mongrator");
+```
+
+Then, each command:
 
 ##### `mongrator up` and `mongrator down`
 
-```
-$ mongrator up                                             # or <mongrator down>
-    --quantity 1                                           # Execute only 1 migration
-    --url mongodb://user@pass:ip.domain:27017/mydatabase   # Specify the URL of the database
-    --folder database/migrations/folder                    # Folder of the migration files
-    --collection CollectionForMigrationsInMyDatabase       # Name of the collection for the migrations in the database
-    --debug false                                          # Disable debugging
-    --keep-alive true                                      # Do not close connection once done
-    --logger my/file/to/my/logger.js                       # Load your custom logger function from a file
-    --mongoose database/mongoose/loader.js                 # Load your custom mongoose instance
-    --options database/configurations/loader.js            # Load your configurations for the connection
+```js
+const mongrator = new Mongrator({
+  quantity: 1,
+  url: "mongodb://user@pass:ip.domain:27017/mydatabase",
+  folder: "database/migrations/folder",
+  collection: "CollectionForMigrationsInMyDatabase",
+  debug: false,
+  keepAlive: true,
+  logger: require("./my/file/to/my/logger.js"),
+  mongoose: require("./database/mongoose/loader.js"),
+  options: require("./database/configurations/loader.js")
+});
+mongrator.up();
 ```
 
 ##### `mongrator list`
 
-```
-$ mongrator list
-    --url mongodb://user@pass:ip.domain:27017/mydatabase   # Specify the URL of the database
-    --folder database/migrations/folder                    # Folder of the migration files
-    --collection CollectionForMigrationsInMyDatabase       # Name of the collection for the migrations in the database
-    --keep-alive true                                      # Do not close connection once done
-    --logger my/file/to/my/logger.js                       # Load your custom logger function from a file
-    --mongoose database/mongoose/loader.js                 # Load your custom mongoose instance
-    --options database/configurations/loader.js            # Load your configurations for the connection
+```js
+const mongrator = new Mongrator({
+  url: "mongodb://user@pass:ip.domain:27017/mydatabase",
+  folder: "database/migrations/folder",
+  collection: "CollectionForMigrationsInMyDatabase",
+  keepAlive: true,
+  logger: require("./my/file/to/my/logger.js"),
+  mongoose: require("./database/mongoose/loader.js"),
+  options: require("./database/configurations/loader.js")
+});
+mongrator.list();
 ```
 
 ##### `mongrator create`
 
-```
-$ mongrator list
-    --name migration-name                                  # Specify the name of the migration
-    --template-path path/to/your/migrations-template.js    # Specify the template file for the new migration
-    --url mongodb://user@pass:ip.domain:27017/mydatabase   # Specify the URL of the database
-    --folder database/migrations/folder                    # Folder of the migration files
-    --collection CollectionForMigrationsInMyDatabase       # Name of the collection for the migrations in the database
-    --keep-alive true                                      # Do not close connection once done
-    --logger my/file/to/my/logger.js                       # Load your custom logger function from a file
-    --mongoose database/mongoose/loader.js                 # Load your custom mongoose instance
-    --options database/configurations/loader.js            # Load your configurations for the connection
+```js
+const mongrator = new Mongrator({
+  name: "migratio-name",
+  templatePath: "path/to/your/migrations-template.js",
+  url: "mongodb://user@pass:ip.domain:27017/mydatabase",
+  folder: "database/migrations/folder",
+  collection: "CollectionForMigrationsInMyDatabase",
+  keepAlive: true,
+  logger: require("./my/file/to/my/logger.js"),
+  mongoose: require("./database/mongoose/loader.js"),
+  options: require("./database/configurations/loader.js")
+});
+mongrator.create();
 ```
 
 In case you needed to provide credentials secretly and/or through environmental variables, you can also:
 
-```
-$ mongrator <subcommand>
-    --config-file path/to/migrations-config.js             # Specify all the options through a file
+```js
+const mongrator = new Mongrator(require("path/to/migrations-config.js"));
 ```
 
 ### Migration files
@@ -177,7 +190,7 @@ The migration files are very simple. They all return an object with:
    - an `up` asynchronous method
    - a `down` asynchronous method
 
-By being an `async`hronous method, it means that it must return a `Promise`.
+By being an *asynchronous* method, it means that it must return a `Promise`.
 
 The default template file looks like this:
 
@@ -223,21 +236,21 @@ module.exports = {
 
 The logging is colorized to easily understand what is going on.
 
-   - On blue, the informative logs.
+   - On **blue**, the informative logs.
 
-   - On red, the error logs.
+   - On **red**, the error logs.
 
-   - On green, the positive logs.
+   - On **green**, the positive logs.
 
-   - On yellow, the warning logs.
+   - On **yellow**, the warning logs.
 
 Also, there is a special notation at the begining of each line:
 
    - `[ ]`: no changes. No persistent operations present.
    - `[·]`: soft changes. Operations that leave digital fingerprint, like `SELECTS` in database.
-   - `[#]`: hard changes. Operations that leave digital fingerprint and modify resources on the machine, like `INSERTS, UPDATES, DELETES` or writing to files.
+   - `[#]`: hard changes. Operations that leave digital fingerprint and modify resources on the machine, like `INSERTS, UPDATES, DELETES` in database, or writing to files.
 
-This nomenclature informs about the type of operation carried by the software that is running.
+This nomenclature informs about the type of operation carried by each step of the process.
 
 ## Tests
 
