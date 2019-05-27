@@ -1,6 +1,6 @@
 # mongrator
 
-![](https://img.shields.io/badge/mongrator-v1.0.1-green.svg) ![](https://img.shields.io/badge/tests-passing-yellow.svg)
+![](https://img.shields.io/badge/mongrator-v1.0.3-green.svg) ![](https://img.shields.io/badge/tests-passing-yellow.svg)
 
 Create, list, do and undo migrations for mongo databases with mongoose and models. CLI and API.
 
@@ -27,16 +27,17 @@ Commands:
   mongrator list    List the status of the migrations
 
 Options:
-  --help        Show help                                                                            [boolean]
-  --version     Show version number                                                                  [boolean]
-  --url         URL of the database                       [string] [default: "mongodb://localhost:27017/test"]
-  --debug       To log or not to log                                                 [boolean] [default: true]
-  --logger      File (*.js) that gets the logger function                                             [string]
-  --folder      Folder of the migrations                                   [string] [default: "db/migrations"]
-  --collection  Name for the collection of the migrations       [string] [default: "DatabaseMigrationsStatus"]
-  --mongoose    File (*.js) that gets the mongoose instance                                           [string]
-  --keep-alive  To leave the connection opened after the command or not             [boolean] [default: false]
-  --options     File (*.js) that gets the options of the db connection                                [string]
+  --url          URL of the database                      [string] [default: "mongodb://localhost:27017/test"]
+  --folder       Folder of the migrations                                  [string] [default: "db/migrations"]
+  --collection   Name for the collection of the migrations      [string] [default: "DatabaseMigrationsStatus"]
+  --debug        To log or not to log                                                [boolean] [default: true]
+  --keep-alive   To leave the connection opened after the command or not            [boolean] [default: false]
+  --logger       File (*.js) that gets the logger function                                            [string]
+  --mongoose     File (*.js) that gets the mongoose instance                                          [string]
+  --options      File (*.js) that gets the options of the db connection                               [string]
+  --config-file  File (*.js) that loads all the CLI parameters                                        [string]
+  --version      Show version number                                                                 [boolean]
+  --help         Show help                                                                           [boolean]
 ```
 
 Type `mongrator <subcommand>` to see the help of any subcommand.

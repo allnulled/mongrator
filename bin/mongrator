@@ -12,18 +12,6 @@ const cli = require("yargs")
 				demand: false,
 				default: "mongodb://localhost:27017/test"
 			})
-			.option("debug", {
-				type: "boolean",
-				describe: "To log or not to log",
-				demand: false,
-				default: true
-			})
-			.option("logger", {
-				type: "string",
-				describe: "File (*.js) that gets the logger function",
-				demand: false,
-				default: undefined
-			})
 			.option("folder", {
 				type: "string",
 				describe: "Folder of the migrations",
@@ -36,17 +24,29 @@ const cli = require("yargs")
 				demand: false,
 				default: "DatabaseMigrationsStatus"
 			})
-			.option("mongoose", {
-				type: "string",
-				describe: "File (*.js) that gets the mongoose instance",
+			.option("debug", {
+				type: "boolean",
+				describe: "To log or not to log",
 				demand: false,
-				default: undefined
+				default: true
 			})
 			.option("keep-alive", {
 				type: "boolean",
 				describe: "To leave the connection opened after the command or not",
 				demand: false,
 				default: false
+			})
+			.option("logger", {
+				type: "string",
+				describe: "File (*.js) that gets the logger function",
+				demand: false,
+				default: undefined
+			})
+			.option("mongoose", {
+				type: "string",
+				describe: "File (*.js) that gets the mongoose instance",
+				demand: false,
+				default: undefined
 			})
 			.options("options", {
 				type: "string",
@@ -77,62 +77,57 @@ const cli = require("yargs")
 					});
 			})
 			.command("up", "Run up migration(s)", (yargs) => {
-				return yargs
-					.default("command", "up")
-					.option("quantity", {
-						type: "number",
-						describe: "Number of migrations to run",
-						demand: false,
-						default: -1
-					});
+				return yargs.default("command", "up").option("quantity", {
+					type: "number",
+					describe: "Number of migrations to run",
+					demand: false,
+					default: -1
+				});
 			})
 			.command("down", "Run down migration(s)", (yargs) => {
-				return yargs
-					.default("command", "down")
-					.option("quantity", {
-						type: "number",
-						describe: "Number of migrations to run",
-						demand: false,
-						default: -1
-					});
+				return yargs.default("command", "down").option("quantity", {
+					type: "number",
+					describe: "Number of migrations to run",
+					demand: false,
+					default: -1
+				});
 			})
-			.command("list", "List the status of the migrations", yargs => {
-				return yargs
-					.default("command", "list")
-			});
+			.command("list", "List the status of the migrations", (yargs) => {
+				return yargs.default("command", "list");
+			})
+			.version(require(__dirname + "/../package.json").version)
+			.help();
 	})
-	.help()
-	.version(require(__dirname + "/../package.json").version)
 	.wrap(110);
 
-if((typeof cli.argv === "string") || (cli.argv.command === "help")) {
+if (typeof cli.argv === "string" || cli.argv.command === "help") {
 	cli.showHelp();
 } else {
-	if(typeof cli.argv.configFile === "string") {
+	if (typeof cli.argv.configFile === "string") {
 		cli.argv = Object.assign(cli.argv, require(cli.argv.configFile));
 	}
-	if(typeof cli.argv.logger === "string") {
+	if (typeof cli.argv.logger === "string") {
 		try {
 			cli.argv.logger = require(cli.argv.logger);
-		} catch(error) {
+		} catch (error) {
 			console.log("Error: failed loading logger function from: " + cli.argv.logger);
 			console.log(error);
 			return;
 		}
 	}
-	if(typeof cli.argv.mongoose === "string") {
+	if (typeof cli.argv.mongoose === "string") {
 		try {
 			cli.argv.mongoose = require(cli.argv.mongoose);
-		} catch(error) {
+		} catch (error) {
 			console.log("Error: failed loading mongoose function from: " + cli.argv.mongoose);
 			console.log(error);
 			return;
 		}
 	}
-	if(typeof cli.argv.options === "string") {
+	if (typeof cli.argv.options === "string") {
 		try {
 			cli.argv.options = require(cli.argv.options);
-		} catch(error) {
+		} catch (error) {
 			console.log("Error: failed loading options function from: " + cli.argv.options);
 			console.log(error);
 			return;
