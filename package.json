@@ -23,7 +23,6 @@
   "author": "",
   "license": "WTFPL",
   "devDependencies": {
-    "bcrypt": "^3.0.6",
     "chai": "^4.2.0",
     "execute-command-sync": "^1.0.2",
     "globby": "^9.2.0",
